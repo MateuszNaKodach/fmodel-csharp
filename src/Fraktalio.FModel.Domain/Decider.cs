@@ -18,7 +18,7 @@ public interface IDecider<in TCommand, TState, TEvent>
     where TState : class?
     where TEvent : class
 {
-    IEnumerable<TEvent> Decide(TCommand c, TState? s);
+    IEnumerable<TEvent> Decide(TCommand c, TState s);
 
     TState Evolve(TState s, TEvent e);
 
