@@ -19,6 +19,24 @@ public record View<TState, TEvent>(
     TState IView<TState, TEvent>.Evolve(TState s, TEvent e) => Evolve.Invoke(s, e);
 
     TState IView<TState, TEvent>.InitialState => InitialState();
+
+    public View<(TState, TState2), TEventSuper> Combine<TState2, TEvent1, TEvent2, TEventSuper>(
+        View<TState2, TEvent> other)
+        where TState2 : class?
+        where TEvent1 : class, TEventSuper
+        where TEvent2 : class, TEventSuper
+        where TEventSuper : class
+    {
+        var internalView1 = new InternalView<TState, TState, TEvent>(Evolve, InitialState);
+        var internalView2 = new InternalView<TState2, TState2, TEvent>(other.Evolve, other.InitialState);
+
+        var combinedInternalView =
+            InternalView<(TState, TState2), (TState, TState2), TEventSuper>
+                .Combine<TState, TState2, TState, TState2, TEvent1, TEvent2, TEventSuper>(
+                    internalView1, internalView2);
+
+        return combinedInternalView.AsView<(TState, TState2), TEventSuper>();
+    }
 }
 
 record InternalView<TStateIn, TStateOut, TEvent>(
@@ -83,7 +101,7 @@ record InternalView<TStateIn, TStateOut, TEvent>(
         return ApplyOnState(mappedState);
     }
 
-    public static InternalView<(TStateIn1, TStateIn2), (TStateOut1, TStateOut2), TEventSuper> Combine<TStateIn1,
+    internal static InternalView<(TStateIn1, TStateIn2), (TStateOut1, TStateOut2), TEventSuper> Combine<TStateIn1,
         TStateIn2, TStateOut1, TStateOut2, TEvent1, TEvent2, TEventSuper>(
         InternalView<TStateIn1, TStateOut1, TEvent1> x,
         InternalView<TStateIn2, TStateOut2, TEvent2> y)
@@ -99,4 +117,9 @@ record InternalView<TStateIn, TStateOut, TEvent>(
 
         return viewX.ProductOnState(viewY);
     }
+
+    // internal View<S, E> AsView<S, E>()
+    //     where S : class, TStateIn, TStateOut
+    //     where E : class, TEvent
+    //     => new View<S, E>(Evolve, InitialState);
 }

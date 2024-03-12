@@ -27,12 +27,23 @@ public class ViewTest
     [Fact]
     public void CombinedViewEvolve()
     {
-        var view = new OddView();
+        var view = View
 
         var state = view.Evolve(new OddViewState(2), new OddNumberMultiplied(5));
 
         state.Should().Be(new OddViewState(10));
     }
+    /**
+     *  t.deepEqual(
+    oddView
+      .combine(evenView)
+      .evolve(
+        { oddState: 0, evenState: 0 },
+        { kind: 'OddNumberAddedEvt', value: 1 }
+      ),
+    { oddState: 1, evenState: 0 }
+  );
+     */
 }
 
 interface IOddNumberEvent;
