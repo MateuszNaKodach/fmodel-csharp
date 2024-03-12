@@ -89,10 +89,10 @@ record InternalView<TStateIn, TStateOut, TEvent>(
         where TEventSuper : class
     {
         var viewX = x.MapContraOnEvent<TEventSuper>(it => (it as TEvent1)!)
-            .MapContraOnState<(TStateIn1, TStateIn2)>(pair => pair.Item1);
+            .DimapOnState<(TStateIn1, TStateIn2), TStateOut1>(pair => pair.Item1, it => it);
         
         var viewY = y.MapContraOnEvent<TEventSuper>(it => (it as TEvent2)!)
-            .MapContraOnState<(TStateIn1, TStateIn2)>(pair => pair.Item2);
+            .DimapOnState<(TStateIn1, TStateIn2), TStateOut2>(pair => pair.Item2, it => it);
         
         return viewX.ProductOnState(viewY);
     }
