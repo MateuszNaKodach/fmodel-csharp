@@ -77,8 +77,11 @@ record InternalView<TStateIn, TStateOut, TEvent>(
         );
 
     InternalView<TStateIn, (TStateOut, TStateOutNew), TEvent>
-        ProductOnState<TStateOutNew>(InternalView<TStateIn, TStateOut, TEvent> fb) =>
-        ApplyOnState(fb.MapOnState(b => (Func<TStateOut, (TStateOut, TStateOutNew)>)(a => (a, b))));
+        ProductOnState<TStateOutNew>(InternalView<TStateIn, TStateOutNew, TEvent> fb)
+    {
+        var mappedState = fb.MapOnState(b => new Func<TStateOut, (TStateOut, TStateOutNew)>(a => (a, b)));
+        return ApplyOnState(mappedState);
+    }
 
     public static InternalView<(TStateIn1, TStateIn2), (TStateOut1, TStateOut2), TEventSuper> Combine<TStateIn1,
         TStateIn2, TStateOut1, TStateOut2, TEvent1, TEvent2, TEventSuper>(
@@ -90,10 +93,10 @@ record InternalView<TStateIn, TStateOut, TEvent>(
     {
         var viewX = x.MapContraOnEvent<TEventSuper>(it => (it as TEvent1)!)
             .DimapOnState<(TStateIn1, TStateIn2), TStateOut1>(pair => pair.Item1, it => it);
-        
+
         var viewY = y.MapContraOnEvent<TEventSuper>(it => (it as TEvent2)!)
             .DimapOnState<(TStateIn1, TStateIn2), TStateOut2>(pair => pair.Item2, it => it);
-        
+
         return viewX.ProductOnState(viewY);
     }
 }
