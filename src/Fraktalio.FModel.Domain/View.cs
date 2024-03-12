@@ -79,4 +79,25 @@ record InternalView<TStateIn, TStateOut, TEvent>(
     InternalView<TStateIn, (TStateOut, TStateOut), TEvent>
         ProductOnState(InternalView<TStateIn, TStateOut, TEvent> fb) =>
         ApplyOnState(fb.MapOnState(b => (Func<TStateOut, (TStateOut, TStateOut)>)(a => (a, b))));
+
+    InternalView<(TStateIn, TStateIn2), (TStateOut, TStateOut2), TEventSuper>
+        Combine<TStateIn2, TStateOut2, TEventSuper>(
+            InternalView<TStateIn2, TStateOut2, TEvent2> y)
+        where TEvent2 : string, TEvent
+        =>
+        ProductOnState(y.MapOnState(b => (Func<TStateOut2, (TStateOut, TStateOut2)>)(a => (a, b))));
+    
+    // internal inline infix fun <Si, So, reified E : E_SUPER, Si2, So2, reified E2 : E_SUPER, E_SUPER> InternalView<Si, So, E?>.combine(
+    // y: InternalView<Si2, So2, E2?>
+    // ): InternalView<Pair<Si, Si2>, Pair<So, So2>, E_SUPER> {
+    //
+    //     val viewX = this.mapLeftOnEvent<E_SUPER> { it as? E }.mapLeftOnState<Pair<Si, Si2>> { pair -> pair.first }
+    //
+    //     val viewY = y.mapLeftOnEvent<E_SUPER> { it as? E2 }.mapLeftOnState<Pair<Si, Si2>> { pair -> pair.second }
+    //
+    //     return viewX.productOnState(viewY)
+    // }
+    //
+    // @PublishedApi
+    // internal fun <S, E> InternalView<S, S, E>.asView() = View(this.evolve, this.initialState)
 }
