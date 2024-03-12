@@ -80,13 +80,30 @@ record InternalView<TStateIn, TStateOut, TEvent>(
         ProductOnState(InternalView<TStateIn, TStateOut, TEvent> fb) =>
         ApplyOnState(fb.MapOnState(b => (Func<TStateOut, (TStateOut, TStateOut)>)(a => (a, b))));
 
+    public static InternalView<(TStateIn1, TStateIn2), (TStateOut1, TStateOut2), TEventSuper> Combine<TStateIn1,
+        TStateIn2, TStateOut1, TStateOut2, TEvent1, TEvent2, TEventSuper>(
+        InternalView<TStateIn1, TStateOut1, TEvent1> x,
+        InternalView<TStateIn2, TStateOut2, TEvent2> y)
+        where TEvent1 : class, TEventSuper
+        where TEvent2 : class, TEventSuper
+        where TEventSuper : class
+    {
+        var viewX = x.MapContraOnEvent<TEventSuper>(it => (it as TEvent1)!)
+            .MapContraOnState<(TStateIn1, TStateIn2)>(pair => pair.Item1);
+        
+        var viewY = y.MapContraOnEvent<TEventSuper>(it => (it as TEvent2)!)
+            .MapContraOnState<(TStateIn1, TStateIn2)>(pair => pair.Item2);
+        
+        return viewX.ProductOnState(viewY);
+    }
+
     InternalView<(TStateIn, TStateIn2), (TStateOut, TStateOut2), TEventSuper>
-        Combine<TStateIn2, TStateOut2, TEventSuper>(
+        Combine<TStateIn2, TStateOut2, TEvent2, TEventSuper>(
             InternalView<TStateIn2, TStateOut2, TEvent2> y)
-        where TEvent2 : string, TEvent
+        where TEvent : TEventSuper
         =>
-        ProductOnState(y.MapOnState(b => (Func<TStateOut2, (TStateOut, TStateOut2)>)(a => (a, b))));
-    
+            ProductOnState(y.MapOnState(b => (Func<TStateOut2, (TStateOut, TStateOut2)>)(a => (a, b))));
+
     // internal inline infix fun <Si, So, reified E : E_SUPER, Si2, So2, reified E2 : E_SUPER, E_SUPER> InternalView<Si, So, E?>.combine(
     // y: InternalView<Si2, So2, E2?>
     // ): InternalView<Pair<Si, Si2>, Pair<So, So2>, E_SUPER> {
