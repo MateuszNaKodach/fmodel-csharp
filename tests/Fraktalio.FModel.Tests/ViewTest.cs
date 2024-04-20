@@ -24,15 +24,15 @@ public class ViewTest
         state.Should().Be(new OddViewState(10));
     }
     
-    [Fact]
-    public void CombinedViewEvolve()
-    {
-        var view = View
-
-        var state = view.Evolve(new OddViewState(2), new OddNumberMultiplied(5));
-
-        state.Should().Be(new OddViewState(10));
-    }
+    // [Fact]
+    // public void CombinedViewEvolve()
+    // {
+    //     var view = View
+    //
+    //     var state = view.Evolve(new OddViewState(2), new OddNumberMultiplied(5));
+    //
+    //     state.Should().Be(new OddViewState(10));
+    // }
     /**
      *  t.deepEqual(
     oddView

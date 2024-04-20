@@ -1,11 +1,23 @@
 namespace Fraktalio.FModel.Domain;
 
+/// <summary>
+/// An Interface for the View
+/// Represents the event handling algorithm, responsible for translating the events into denormalized state, which is more adequate for querying.
+/// </summary>
+/// <typeparam name="TState">State</typeparam>
+/// <typeparam name="TEvent">Event</typeparam>
 public interface IView<TState, in TEvent>
     where TState : class?
     where TEvent : class
 {
+    /// <summary>
+    /// A function/lambda that takes input state of type S and input event of type E as parameters, and returns the output/new state S
+    /// </summary>
     TState Evolve(TState s, TEvent e);
 
+    /// <summary>
+    /// A starting point / An initial state of type S
+    /// </summary>
     TState InitialState { get; }
 }
 
@@ -20,26 +32,26 @@ public record View<TState, TEvent>(
 
     TState IView<TState, TEvent>.InitialState => InitialState();
 
-    public View<(TState, TState2), TEventSuper> Combine<TState2, TEvent1, TEvent2, TEventSuper>(
-        View<TState2, TEvent> other)
-        where TState2 : class?
-        where TEvent1 : class, TEventSuper
-        where TEvent2 : class, TEventSuper
-        where TEventSuper : class
-    {
-        var internalView1 = new InternalView<TState, TState, TEvent>(Evolve, InitialState);
-        var internalView2 = new InternalView<TState2, TState2, TEvent>(other.Evolve, other.InitialState);
-
-        var combinedInternalView =
-            InternalView<(TState, TState2), (TState, TState2), TEventSuper>
-                .Combine<TState, TState2, TState, TState2, TEvent1, TEvent2, TEventSuper>(
-                    internalView1, internalView2);
-
-        return combinedInternalView.AsView<(TState, TState2), TEventSuper>();
-    }
+    // public View<(TState, TState2), TEventSuper> Combine<TState2, TEvent1, TEvent2, TEventSuper>(
+    //     View<TState2, TEvent> other)
+    //     where TState2 : class?
+    //     where TEvent1 : class, TEventSuper
+    //     where TEvent2 : class, TEventSuper
+    //     where TEventSuper : class
+    // {
+    //     var internalView1 = new InternalView<TState, TState, TEvent>(Evolve, InitialState);
+    //     var internalView2 = new InternalView<TState2, TState2, TEvent>(other.Evolve, other.InitialState);
+    //
+    //     var combinedInternalView =
+    //         InternalView<(TState, TState2), (TState, TState2), TEventSuper>
+    //             .Combine<TState, TState2, TState, TState2, TEvent1, TEvent2, TEventSuper>(
+    //                 internalView1, internalView2);
+    //
+    //     return combinedInternalView.AsView<(TState, TState2), TEventSuper>();
+    // }
 }
 
-record InternalView<TStateIn, TStateOut, TEvent>(
+internal record InternalView<TStateIn, TStateOut, TEvent>(
     Func<TStateIn, TEvent, TStateOut> Evolve,
     Func<TStateOut> InitialState)
 {
@@ -117,9 +129,4 @@ record InternalView<TStateIn, TStateOut, TEvent>(
 
         return viewX.ProductOnState(viewY);
     }
-
-    // internal View<S, E> AsView<S, E>()
-    //     where S : class, TStateIn, TStateOut
-    //     where E : class, TEvent
-    //     => new View<S, E>(Evolve, InitialState);
 }
