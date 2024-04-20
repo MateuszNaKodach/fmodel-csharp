@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F0C844B9-4AA0-4DF4-B392-B8DCF17364FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fraktalio.FModel.Domain", "src\Fraktalio.FModel.Domain\Fraktalio.FModel.Domain.csproj", "{1BC187F9-8934-413B-8F22-A674F355A56D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{726D9B9E-60AE-4778-94FE-9FABFFCA5E7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fraktalio.FModel.Tests", "tests\Fraktalio.FModel.Tests\Fraktalio.FModel.Tests.csproj", "{D18D7270-4A5D-4447-8DA1-959D3FB153D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1BC187F9-8934-413B-8F22-A674F355A56D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BC187F9-8934-413B-8F22-A674F355A56D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BC187F9-8934-413B-8F22-A674F355A56D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BC187F9-8934-413B-8F22-A674F355A56D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D18D7270-4A5D-4447-8DA1-959D3FB153D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18D7270-4A5D-4447-8DA1-959D3FB153D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18D7270-4A5D-4447-8DA1-959D3FB153D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18D7270-4A5D-4447-8DA1-959D3FB153D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1BC187F9-8934-413B-8F22-A674F355A56D} = {F0C844B9-4AA0-4DF4-B392-B8DCF17364FD}
+		{D18D7270-4A5D-4447-8DA1-959D3FB153D1} = {726D9B9E-60AE-4778-94FE-9FABFFCA5E7F}
+	EndGlobalSection
+EndGlobal
